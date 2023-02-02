@@ -37,6 +37,8 @@ public class OrderDetail {
     private BigDecimal price;
     private BigDecimal amount;
     private Timestamp createAt;
+    @Column(name = "status", columnDefinition = "VARCHAR(12) default 'ACTIVE'")
+    private String status;
      
     @ManyToOne
     @JoinColumn(name = "product_id")

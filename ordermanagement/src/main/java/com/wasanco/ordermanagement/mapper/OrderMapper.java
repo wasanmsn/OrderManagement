@@ -10,6 +10,7 @@ import org.mapstruct.Named;
 import com.wasanco.ordermanagement.dto.OrderDetailDto;
 import com.wasanco.ordermanagement.dto.OrderDto;
 import com.wasanco.ordermanagement.dto.ProductDto;
+import com.wasanco.ordermanagement.dto.request.OrderRequestDto;
 import com.wasanco.ordermanagement.entity.OrderDb;
 import com.wasanco.ordermanagement.entity.OrderDetail;
 import com.wasanco.ordermanagement.entity.Product;
@@ -18,10 +19,7 @@ import com.wasanco.ordermanagement.entity.Product;
 @Named("OrderMapper")
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-
-
-
-
+    
     @Mapping(source = "totalAmnt",target = "totalAmount")
     OrderDb orderDtoToOrderDb(OrderDto orderDto);
     @Mapping(source = "totalAmount",target = "totalAmnt")
@@ -37,6 +35,9 @@ public interface OrderMapper {
         @Mapping(target="orderDetail",ignore=true)
     })
     ProductDto productToProductDto(Product product);
+
+    @Mapping(source = "totalAmount",target = "totalAmnt")
+    OrderRequestDto orderDbToOrderRequestDto(OrderDb order);
 
 
 

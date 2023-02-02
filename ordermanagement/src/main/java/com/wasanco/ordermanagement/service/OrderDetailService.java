@@ -7,10 +7,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wasanco.ordermanagement.Constants;
 import com.wasanco.ordermanagement.dto.OrderDetailDto;
+import com.wasanco.ordermanagement.dto.request.OrderDetailRequestDto;
 import com.wasanco.ordermanagement.entity.OrderDb;
 import com.wasanco.ordermanagement.entity.OrderDetail;
-import com.wasanco.ordermanagement.entity.Product;
+import com.wasanco.ordermanagement.exceptions.NotFoundException;
 import com.wasanco.ordermanagement.mapper.OrderDetailMapper;
 import com.wasanco.ordermanagement.repository.OrderDbRepository;
 import com.wasanco.ordermanagement.repository.OrderDetailRepository;
@@ -59,7 +61,26 @@ public class OrderDetailService {
         OrderDb order = orderDetail.getOrder();
         order.setTotalAmount(order.getTotalAmount().subtract(orderDetail.getAmount()));
         orderDbRepository.save(order);
-        repository.deleteById(id);
+        orderDetail.setStatus(Constants.DELETE);
+        repository.save(orderDetail);
+
         return true;
+    }
+
+    public OrderDetailDto updateOrderDetail(OrderDetailRequestDto orderDetailDto,UUID id) throws Exception{
+        OrderDetail orderDetail = repository.findById(id).orElse(null);
+        if(orderDetail == null){
+            
+            throw new NotFoundException("Product Id not found. "+id);
+        }
+        OrderDb order = orderDetail.getOrder();
+        order.setTotalAmount(order.getTotalAmount().subtract(orderDetail.getAmount()));
+        orderDetail.setProductName(orderDetailDto.getProductName());
+        orderDetail.setPrice(orderDetailDto.getPrice());
+        orderDetail.setQuantity(orderDetailDto.getQuantity());
+        orderDetail.setAmount(orderDetail.getPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
+        order.setTotalAmount(orderDetail.getAmount().add(order.getTotalAmount()));
+        orderDbRepository.save(order);
+        return mapper.orderDetailToOrderDetailDto(repository.save(orderDetail));
     }
 }
