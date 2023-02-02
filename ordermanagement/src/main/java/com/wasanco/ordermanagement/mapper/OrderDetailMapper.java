@@ -15,6 +15,7 @@ import com.wasanco.ordermanagement.entity.Product;
 @Named("OrderDetailMapper")
 @Mapper(componentModel = "spring")
 public interface OrderDetailMapper {
+    
     OrderDetail orderDetailDtoToOrderDetail(OrderDetailDto orderDetailDto);
     @Mappings({
         @Mapping(target="order",ignore=true)
