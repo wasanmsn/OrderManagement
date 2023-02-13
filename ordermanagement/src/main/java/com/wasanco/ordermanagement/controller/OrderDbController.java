@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,7 @@ import com.wasanco.ordermanagement.dto.request.OrderRequestDto;
 import com.wasanco.ordermanagement.exceptions.NotFoundException;
 import com.wasanco.ordermanagement.service.OrderDbService;
 
+@CrossOrigin(origins = "http://localhost:8084")
 @RestController
 public class OrderDbController {
     @Autowired
@@ -28,11 +31,8 @@ public class OrderDbController {
         
     }
     @GetMapping("/orders/{id}")
-    public List<OrderDto> getOrderById(@PathVariable UUID id,@RequestParam String sort){
-        if(sort.equalsIgnoreCase("ASC")){
-            return service.getOrderByIdOrderByCreateAtAsc(id);
-        }
-        return service.getOrderByIdOrderByCreateAtDesc(id);
+    public OrderDto getOrderById(@PathVariable UUID id){
+        return service.getOrderById(id);
 
     }
     @GetMapping("/orders")
@@ -41,8 +41,8 @@ public class OrderDbController {
 
     }
 
-    @DeleteMapping("/orders")
-    public void removeOrderDetail(@RequestParam UUID id){
+    @DeleteMapping("/orders/{id}")
+    public void removeOrderDetail(@PathVariable UUID id){
             Boolean isExist = service.deleteOrder(id);
             if(!isExist){
                 throw new NotFoundException("Order Detail not found "+id.toString());
@@ -50,9 +50,14 @@ public class OrderDbController {
 
     }
 
-    @PutMapping("/orders/{id}")
-    public OrderDto updateOrder(@PathVariable UUID id,@RequestBody OrderRequestDto order) throws Exception{
-        return service.updateOrder(order, id);
+    @PutMapping("/orders/")
+    public OrderDto updateOrder(@RequestBody OrderRequestDto order) throws Exception{
+        return service.updateOrder(order);
+    }
+
+    @PostMapping("/orders/")
+    public OrderDto createOrder(@RequestBody OrderRequestDto order) {
+        return service.createOrder(order);
     }
     
 }

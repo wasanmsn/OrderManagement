@@ -1,8 +1,10 @@
 package com.wasanco.ordermanagement.dto;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wasanco.ordermanagement.entity.OrderDetail;
 
 import jakarta.persistence.Column;
 import jakarta.validation.Valid;
@@ -28,8 +30,4 @@ public class OrderDetailDto {
     @DecimalMin(value = "1.0", inclusive = false)
     @Digits(integer = 10, fraction = 2, message = "Digits out of bound {10,2}")
     private BigDecimal price;
-    @NotNull
-    @Valid
-    private ProductDto product;
-    private OrderDto order;
 }
