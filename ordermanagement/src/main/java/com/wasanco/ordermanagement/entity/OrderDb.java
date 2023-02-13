@@ -8,13 +8,18 @@ import java.util.UUID;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.wasanco.ordermanagement.Constants;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -30,9 +35,14 @@ public class OrderDb {
     private Timestamp createAt;
     private BigDecimal totalAmount;
     @Column(name = "status", columnDefinition = "VARCHAR(12) default 'ACTIVE'")
-    private String status;
+    private String status = Constants.ACTIVE;
 
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
+    // @ElementCollection
+    // @JdbcTypeCode(java.sql.Types.VARCHAR)
+    // private List<UUID> orderDetail;
+    // @Transient
     private List<OrderDetail> orderDetail;
+
 }

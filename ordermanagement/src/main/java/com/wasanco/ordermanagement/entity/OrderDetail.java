@@ -1,5 +1,6 @@
 package com.wasanco.ordermanagement.entity;
 
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wasanco.ordermanagement.Constants;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,14 +40,20 @@ public class OrderDetail {
     private BigDecimal amount;
     private Timestamp createAt;
     @Column(name = "status", columnDefinition = "VARCHAR(12) default 'ACTIVE'")
-    private String status;
+    private String status = Constants.ACTIVE;
      
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    // @ManyToOne
+    // @JoinColumn(name = "product_id")
+    @JdbcTypeCode(java.sql.Types.VARCHAR)
+    @Column(name = "product_id",columnDefinition = "VARCHAR(36)")
+    private UUID product;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    // @JdbcTypeCode(java.sql.Types.VARCHAR)
+    // @Column(name = "order_id",columnDefinition = "VARCHAR(36)")
+    // private UUID order;
     private OrderDb order;
+
 
 }
